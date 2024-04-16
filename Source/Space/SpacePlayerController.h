@@ -9,7 +9,7 @@
 #include "GameFramework/PlayerController.h"
 #include "SpacePlayerController.generated.h"
 
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractDelegate);
 /**
  * 
  */
@@ -27,12 +27,25 @@ public:
 	TSoftObjectPtr<UInputAction> MovementAction;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
+	TSoftObjectPtr<UInputAction> JumpAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
 	TSoftObjectPtr<UInputAction> InteractAction;
 
-	UPROPERTY(EditAnywhere, Category = "Properties")
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TSoftObjectPtr<UInputAction> LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Properties")
 	float Speed = 10;
 
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "Properties")
+	float InteractDistance = 200;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnInteractDelegate OnInteract;
+
 private:
+
 
 #pragma endregion
 
@@ -46,10 +59,14 @@ public:
 
 	virtual void SetupInputComponent() override;
 
-private:
+protected:
 	void Move(const FInputActionValue& value);
 
 	void Interact(const FInputActionValue& value);
+
+	void Jump(const FInputActionValue& value);
+
+	void Look(const FInputActionValue& value);
 #pragma endregion
 
 	

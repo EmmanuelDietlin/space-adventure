@@ -3,6 +3,7 @@
 #include "SpacePlayerController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "SpacePlayer.h"
 
 void ASpacePlayerController::BeginPlay() 
@@ -26,6 +27,8 @@ void ASpacePlayerController::SetupInputComponent()
 
 	Input->BindAction(InteractAction.LoadSynchronous(), ETriggerEvent::Triggered, this, &ASpacePlayerController::Interact);
 	Input->BindAction(MovementAction.LoadSynchronous(), ETriggerEvent::Triggered, this, &ASpacePlayerController::Move);
+	Input->BindAction(JumpAction.LoadSynchronous(), ETriggerEvent::Triggered, this, &ASpacePlayerController::Jump);
+	Input->BindAction(LookAction.LoadSynchronous(), ETriggerEvent::Triggered, this, &ASpacePlayerController::Look);	
 }
 
 void ASpacePlayerController::Move(const FInputActionValue& a_value) 
@@ -35,6 +38,7 @@ void ASpacePlayerController::Move(const FInputActionValue& a_value)
 
 	FVector direction = player->GetActorForwardVector() * movement.X;
 	direction += player->GetActorRightVector() * movement.Y;
+	direction.Z = 0;
 	direction.Normalize();
 	float value = FMath::Sqrt(movement.X * movement.X + movement.Y * movement.Y) * Speed;
 
@@ -46,4 +50,19 @@ void ASpacePlayerController::Move(const FInputActionValue& a_value)
 void ASpacePlayerController::Interact(const FInputActionValue& a_value) 
 {
 	UE_LOG(LogTemp, Log, TEXT("Interacted with object"));
+	OnInteract.Broadcast();
+}
+
+void ASpacePlayerController::Jump(const FInputActionValue& a_value) 
+{
+	ASpacePlayer* player = Cast<ASpacePlayer>(GetPawn());
+	player->Jump();
+	UE_LOG(LogTemp, Log, TEXT("Jumped"));
+}
+
+void ASpacePlayerController::Look(const FInputActionValue& a_value) 
+{
+	FVector2D vector = a_value.Get<FVector2D>();
+	AddYawInput(vector.X);
+	AddPitchInput(vector.Y);
 }

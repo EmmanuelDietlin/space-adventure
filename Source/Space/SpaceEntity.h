@@ -3,18 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SpaceEntity.h"
 #include "GameFramework/Character.h"
-#include "SpacePlayer.generated.h"
+#include "SpaceEntity.generated.h"
 
-UCLASS()
-class SPACE_API ASpacePlayer : public ASpaceEntity
+UCLASS(Abstract)
+class SPACE_API ASpaceEntity : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	ASpacePlayer();
+	ASpaceEntity();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,4 +25,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	UPROPERTY(BlueprintReadonly)
+	TWeakObjectPtr<UStaticMeshComponent> HeadComponent;
+
 };

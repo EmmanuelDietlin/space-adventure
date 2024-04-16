@@ -38,7 +38,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class SPACE_API UPlanetsData : public UDataAsset
 {
 	GENERATED_BODY()
@@ -51,10 +51,10 @@ public:
 	TMap<uint16, TSoftObjectPtr<UWorld>> SpaceLocations;
 
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FPlanet GetPlanetByName(const FName a_name);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FPlanet GetPlanetByCoords(const FIntVector a_coords);
 };
 
